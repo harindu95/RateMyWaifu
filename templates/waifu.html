@@ -1,0 +1,20 @@
+<html>
+   <body>
+      <form action = "{{ url_for('newwaifu') }}" method = "POST">
+         <h3>Waifu Information</h3>
+         Name<br>
+         <input type = "text" name = "nm" /></br>
+         
+         Description<br>
+         <textarea name = "desc" ></textarea><br>
+         
+         Image URL<br>
+         <input type = "text" name = "imgurl" /></br>
+         
+		 Anime<br>
+         <input type = "text" name = "aname" /></br>
+
+         <input type = "submit" value = "submit" /><br>
+      </form>
+   </body>
+</html>
