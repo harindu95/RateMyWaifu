@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 import sqlite3 as sql
+from flask_bootstrap import Bootstrap
 app = Flask(__name__)
+bootstrap = Bootstrap(app)
 
 DATABASE = 'database.db'
 
@@ -106,6 +108,7 @@ def waifulist():
    
    cur = con.cursor()
    cur.execute("select * from character")
+#   cur.execute("select * from (character AS C JOIN anime AS A On C.aName=A.name) WHERE year=2015")
    
    rows = cur.fetchall();
    return render_template("waifulist.html",rows = rows)
