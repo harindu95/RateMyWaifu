@@ -14,7 +14,7 @@ def login():
 	return "<H1> LOGIN </H1>"
 	
 @app.route('/waifu')
-def new_student():
+def new_waifu():
    return render_template('waifu.html')
 
 @app.route('/newwaifu',methods = ['POST', 'GET'])
@@ -43,6 +43,62 @@ def newwaifu():
          return render_template("result.html",msg = msg)
          con.close()
 
+@app.route('/user')
+def new_user():
+   return render_template('user.html')
+
+@app.route('/newuser',methods = ['POST', 'GET'])
+def newuser():
+   if request.method == 'POST':
+      class pwMismatch(Exception):
+         pass
+      class emptyField(Exception):
+         pass
+      try:
+         unm = request.form['uname']
+         pword = request.form['pw']
+         cpword = request.form['cpw']
+         fnm = request.form['fname']
+         lnm = request.form['lname']
+         day = request.form['dy']
+         month = request.form['mn']
+         year = request.form['yr']
+         descr = request.form['desc']
+         imagurl = request.form['imgurl']
+         moderator = 0
+         if (request.form.get('mflag')):
+            moderator = 1
+         admin = 0
+         if (request.form.get('aflag')):
+            admin = 1
+#         moderator = request.form['mflag']
+#         admin = request.form['aflag']
+#         pin = request.form['pin']
+         if (pword != cpword): 
+            msg = "password does not match"
+            raise pwMismatch
+         if (len(unm)<1 or len(pword)<1 or len(fnm)<1 or len(lnm)<1 ):
+            msg = "required field is empty"
+            raise emptyField
+         with sql.connect("database.db") as con:
+            cur = con.cursor()
+
+            cur.execute("INSERT INTO user (username,password,firstName,lastName,dobDay,dobMonth,dobYear,image,description,modFlag,adminFlag) VALUES (?,?,?,?,?,?,?,?,?,?,?)",(unm,pword,fnm,lnm,day,month,year,imagurl,descr,moderator,admin) )
+            
+            con.commit()
+            msg = "User successfully added"
+#      except pwMismatch:
+#         con.rollback()
+#         msg = "password does not match"
+      except:
+         con.rollback()
+         msg = "error in insert operation"
+      
+      finally:
+         return render_template("result.html",msg = msg)
+         con.close()
+
+		 
 @app.route('/waifulist')
 def waifulist():
    con = sql.connect("database.db")
@@ -53,6 +109,17 @@ def waifulist():
    
    rows = cur.fetchall();
    return render_template("waifulist.html",rows = rows)
+   
+@app.route('/userlist')
+def userlist():
+   con = sql.connect("database.db")
+   con.row_factory = sql.Row
+   
+   cur = con.cursor()
+   cur.execute("select * from user")
+   
+   rows = cur.fetchall();
+   return render_template("userlist.html",rows = rows)
 """
 @app.route('/test')
 def test():
