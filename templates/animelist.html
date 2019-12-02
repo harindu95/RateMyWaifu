@@ -16,18 +16,24 @@
 		</div>
 		<div class="container text-center">
       <table class="table table-hover" border = 1>
-         <h1> Users in DB </h1>
+         <h1> Anime in DB </h1>
          <thead style="font-size:30px">
 			<td style="width:150px">image</td>
-            <td>Username</td>
-			<td>Birthday</td>
+            <td>Name</td>
+			<td>Release</td>
+			<td style="font-size:15px">Number of Episodes</td>
+			<td>Rating</td>
+            <td>Studio</td>
             <td>Description</td>
          </thead>
          {% for row in rows %}
             <tr>
-               <td><img src={{row["image"]}} width="150" height="200"></td>
-               <td style="font-size:20px">{{row["username"]}}</td>
-			   <td>{{row["dob"]}}</td>
+               <td><img src={{row["coverImage"]}} width="150" height="200"></td>
+               <td style="font-size:20px">{{row["name"]}}</td>
+               <td style="font-size:20px"> {{ row["season"]}} {{ row["year"]}}</td>
+			   <td style="font-size:20px">{{row["numEpisodes"]}}</td>
+			   <td style="font-size:20px">{{row["esrb"]}}</td>
+			   <td style="font-size:20px">{{row["sName"]}}</td>
                <td>{{row["description"]}}</td>	
             </tr>
          {% endfor %}

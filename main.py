@@ -14,6 +14,46 @@ def main():
 @app.route('/login')
 def login():
 	return "<H1> LOGIN </H1>"
+
+@app.route('/anime')
+def new_anime():
+#   dropdown_list = ['Air', 'Land', 'Sea']
+   return render_template('anime.html')
+
+@app.route('/newanime',methods = ['POST', 'GET'])
+def newanime():
+   if request.method == 'POST':
+      class inputError(Exception):
+         pass
+      try:
+         
+         nm = request.form['nm']
+         descr = request.form['desc']
+         imagurl = request.form['imgurl']
+         season = request.form['season']
+         yr = request.form['yr']
+         numEps = request.form['eps']
+         esrb = request.form['esrb']
+         sname = request.form['snm']
+#         pin = request.form['pin']
+         if (len(nm)<1 or len(sname)<1):
+            msg = "required field is empty"
+            raise inputError         
+         with sql.connect("database.db") as con:
+             
+            cur = con.cursor()
+
+            cur.execute("INSERT INTO anime (name,coverImage,description,season,year,numEpisodes,esrb,sName) VALUES (?,?,?,?,?,?,?,?)",(nm,imagurl,descr,season,yr,numEps,esrb,sname) )
+            
+            con.commit()
+            msg = "Record successfully added"
+      except:
+         con.rollback()
+         msg = "error in insert operation"
+      
+      finally:
+         return render_template("result.html",msg = msg)
+         con.close()
 	
 @app.route('/waifu')
 def new_waifu():
@@ -22,14 +62,19 @@ def new_waifu():
 @app.route('/newwaifu',methods = ['POST', 'GET'])
 def newwaifu():
    if request.method == 'POST':
+      class inputError(Exception):
+         pass
       try:
          nm = request.form['nm']
          descr = request.form['desc']
          imagurl = request.form['imgurl']
          aname = request.form['aname']
 #         pin = request.form['pin']
-         
+         if (len(nm)<1 or len(aname)<1):
+            msg = "required field is empty"
+            raise inputError         
          with sql.connect("database.db") as con:
+             
             cur = con.cursor()
             charID = len(cur.execute("select * from character").fetchall())+1
 
@@ -62,9 +107,9 @@ def newuser():
          cpword = request.form['cpw']
          fnm = request.form['fname']
          lnm = request.form['lname']
-         day = request.form['dy']
-         month = request.form['mn']
-         year = request.form['yr']
+         dob = request.form['dob']
+#         month = request.form['mn']
+#         year = request.form['yr']
          descr = request.form['desc']
          imagurl = request.form['imgurl']
          moderator = 0
@@ -85,7 +130,7 @@ def newuser():
          with sql.connect("database.db") as con:
             cur = con.cursor()
 
-            cur.execute("INSERT INTO user (username,password,firstName,lastName,dobDay,dobMonth,dobYear,image,description,modFlag,adminFlag) VALUES (?,?,?,?,?,?,?,?,?,?,?)",(unm,pword,fnm,lnm,day,month,year,imagurl,descr,moderator,admin) )
+            cur.execute("INSERT INTO user (username,password,firstName,lastName,dob,image,description,modFlag,adminFlag) VALUES (?,?,?,?,?,?,?,?,?)",(unm,pword,fnm,lnm,dob,imagurl,descr,moderator,admin) )
             
             con.commit()
             msg = "User successfully added"
@@ -123,6 +168,17 @@ def userlist():
    
    rows = cur.fetchall();
    return render_template("userlist.html",rows = rows)
+
+@app.route('/animelist')
+def animelist():
+   con = sql.connect("database.db")
+   con.row_factory = sql.Row
+   
+   cur = con.cursor()
+   cur.execute("select * from anime")
+   
+   rows = cur.fetchall();
+   return render_template("animelist.html",rows = rows)
 """
 @app.route('/test')
 def test():
