@@ -43,6 +43,11 @@ def newanime():
              
             cur = con.cursor()
 
+            try:
+                cur.execute("INSERT INTO studio VALUES (?)", (sname,))
+            except:
+                con.rollback()
+
             cur.execute("INSERT INTO anime (name,coverImage,description,season,year,numEpisodes,esrb,sName) VALUES (?,?,?,?,?,?,?,?)",(nm,imagurl,descr,season,yr,numEps,esrb,sname) )
             
             con.commit()
