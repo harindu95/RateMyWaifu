@@ -14,7 +14,7 @@
 		  <h1>Rate My Waifu!</h1>
 		  <p>The Ultimate waifu rating site!</p>
 		</div>
-		<div class="container text-center">
+		<div class="container col-md-3 col-md-offset-5">
       <form action = "{{ url_for('newanime') }}" method = "POST">
          <h3>Anime Information</h3>
          Name<br>
@@ -83,9 +83,80 @@
 		 
 		 Studio Name<br>
          <input type = "text" name = "snm" /></br>
-		 
-         <input type = "submit" value = "submit" /><br>
+		 Genres<br>
+			<textarea name="genres" id="g" style="width:200px;height:200px"></textarea><br>
+		 <input type = "submit" value = "submit" /><br>
+		 </div>
+		 <div class="col-sm-4">
+		 Genres<br>
+			<input type = "checkbox" onclick="f(0)" id="c0" name="Action"/>Action</br>
+			<input type = "checkbox" onclick="f(1)" id="c1" name="Adventure"/>Adventure</br>
+			<input type = "checkbox" onclick="f(2)" id="c2" name="Comedy"/>Comedy</br>
+			<input type = "checkbox" onclick="f(3)" id="c3" name="Drama"/>Drama</br>
+			<input type = "checkbox" onclick="f(4)" id="c4" name="Demons"/>Demons</br>
+			<input type = "checkbox" onclick="f(5)" id="c5" name="Ecchi"/>Ecchi</br>
+			<input type = "checkbox" onclick="f(6)" id="c6" name="Fantasy"/>Fantasy</br>
+			<input type = "checkbox" onclick="f(7)" id="c7" name="Game"/>Game</br>
+			<input type = "checkbox" onclick="f(8)" id="c8" name="Harem"/>Harem</br>
+			<input type = "checkbox" onclick="f(9)" id="c9" name="Hentai"/>Hentai</br>
+			<input type = "checkbox" onclick="f(10)" id="c10" name="Historical"/>Historical</br>
+			<input type = "checkbox" onclick="f(11)" id="c11" name="Horror"/>Horror</br>
+			<input type = "checkbox" onclick="f(12)" id="c12" name="Isekai"/>Isekai</br>
+			<input type = "checkbox" onclick="f(13)" id="c13" name="Kids"/>Kids</br>
+			<input type = "checkbox" onclick="f(14)" id="c14" name="Magic"/>Magic</br>
+			<input type = "checkbox" onclick="f(15)" id="c15" name="Martial Arts"/>Martial Arts</br>
+			<input type = "checkbox" onclick="f(16)" id="c16" name="Mecha"/>Mecha</br>
+			<input type = "checkbox" onclick="f(17)" id="c17" name="Military"/>Military</br>
+			<input type = "checkbox" onclick="f(18)" id="c18" name="Music"/>Music</br>
+			<input type = "checkbox" onclick="f(19)" id="c19" name="Mystery"/>Mystery</br>
+			<input type = "checkbox" onclick="f(20)" id="c20" name="Parody"/>Parody</br>
+			<input type = "checkbox" onclick="f(21)" id="c21" name="Post-Apocalyptic"/>Post-Apocalyptic</br>
+			<input type = "checkbox" onclick="f(22)" id="c22" name="Psychological"/>Psychological</br>
+			<input type = "checkbox" onclick="f(23)" id="c23" name="Romance"/>Romance</br>
+			<input type = "checkbox" onclick="f(24)" id="c24" name="Sci-Fi"/>Sci-Fi</br>
+			<input type = "checkbox" onclick="f(25)" id="c25" name="Shoujo"/>Shoujo</br>
+			<input type = "checkbox" onclick="f(26)" id="c26" name="Shounen"/>Shounen</br>
+			<input type = "checkbox" onclick="f(27)" id="c27" name="School"/>Slice of Life</br>
+			<input type = "checkbox" onclick="f(28)" id="c28" name="Sports"/>Sports</br>
+			<input type = "checkbox" onclick="f(29)" id="c29" name="Supernatural"/>Supernatural</br>
+			<input type = "checkbox" onclick="f(30)" id="c30" name="Super Power"/>Super Power</br>
+			<input type = "checkbox" onclick="f(31)" id="c31" name="Vampire"/>Vampire</br>
+			<input type = "checkbox" onclick="f(32)" id="c32" name="Yaoi"/>Yaoi</br>
+			<input type = "checkbox" onclick="f(33)" id="c33" name="Yuri"/>Yuri</br>
+         </div>
       </form>
-	  </div>
+	  
    </body>
 </html>
+<script>
+function f(id) {
+  var checkBox = document.getElementById("c"+id);
+  var text = document.getElementById("g");
+  if (checkBox.checked == true){
+  	if (text.value.search(checkBox.name) == -1) {
+  	if (text.value == null) {
+    	text.value = checkBox.name;
+    }
+    else {
+    	text.value = text.value+","+checkBox.name;
+    }
+    }
+  } else {
+  	var comma = ",";
+    
+  	var start = text.value.search(checkBox.name);
+    var end = checkBox.name.length;
+    if (start == 0) {
+    	if (text.value.search(",") == -1) {
+        	text.value = text.value.replace(checkBox.name, "");
+        }
+        else {
+    		text.value = text.value.replace(checkBox.name+comma, "");
+        }
+    }
+    else {
+    	text.value = text.value.replace(comma+checkBox.name, "");
+    }
+  }
+}
+</script>

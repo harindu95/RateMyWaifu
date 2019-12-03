@@ -25,7 +25,6 @@ def newanime():
       class inputError(Exception):
          pass
       try:
-         
          nm = request.form['nm']
          descr = request.form['desc']
          imagurl = request.form['imgurl']
@@ -34,6 +33,9 @@ def newanime():
          numEps = request.form['eps']
          esrb = request.form['esrb']
          sname = request.form['snm']
+         gs = request.form.get('genres').split(",")
+#         for g in gs:
+#             print(g)
 #         pin = request.form['pin']
          if (len(nm)<1 or len(sname)<1):
             msg = "required field is empty"
@@ -44,6 +46,16 @@ def newanime():
 
             try:
                 cur.execute("INSERT INTO studio VALUES (?)", (sname,))
+            except:
+                con.rollback()
+
+            try:
+                print (len(gs))
+                if (len(gs) >1):
+                    for g in gs:
+                        cur.execute("INSERT INTO animeGenres (animeName, genre) VALUES (?,?)", (nm,g))
+                else:
+                        cur.execute("INSERT INTO animeGenres (animeName, genre) VALUES (?,null)", (nm,))
             except:
                 con.rollback()
 
@@ -197,7 +209,13 @@ def animelist():
    cur.execute("select * from anime")
    
    rows = cur.fetchall();
-   return render_template("animelist.html",rows = rows)
+
+#   cur2 = con.cursor()
+   cur.execute("select * from anime join animeGenres on name=animeName")
+   
+   rows2 = cur.fetchall();
+
+   return render_template("animelist.html",rows = rows, rows2 = rows2)
 """
 @app.route('/test')
 def test():
