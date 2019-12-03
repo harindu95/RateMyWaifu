@@ -17,7 +17,6 @@ def login():
 
 @app.route('/anime')
 def new_anime():
-#   dropdown_list = ['Air', 'Land', 'Sea']
    return render_template('anime.html')
 
 @app.route('/newanime',methods = ['POST', 'GET'])
@@ -74,6 +73,7 @@ def newwaifu():
          descr = request.form['desc']
          imagurl = request.form['imgurl']
          aname = request.form['aname']
+         redirect = False
 #         pin = request.form['pin']
          if (len(nm)<1 or len(aname)<1):
             msg = "required field is empty"
@@ -82,6 +82,17 @@ def newwaifu():
              
             cur = con.cursor()
             charID = len(cur.execute("select * from character").fetchall())+1
+            print(aname)
+            if (len(cur.execute("select * from anime where name=(?)", (aname,)).fetchall()) == 0):
+#                new_anime()
+                redirect = True
+            """
+            try:
+                cur.execute("INSERT INTO anime VALUES (?)", (aname,))
+            except:
+                con.rollback()
+                newanime()
+            """
 
             cur.execute("INSERT INTO character (charID,name,description,image,aName) VALUES (?,?,?,?,?)",(charID,nm,descr,imagurl,aname) )
             
@@ -92,8 +103,11 @@ def newwaifu():
          msg = "error in insert operation"
       
       finally:
-         return render_template("result.html",msg = msg)
-         con.close()
+        if redirect:
+            return render_template("anime.html", animeName = aname)
+        else:
+            return render_template("result.html",msg = msg)
+        con.close()
 
 @app.route('/user')
 def new_user():
